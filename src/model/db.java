@@ -16,7 +16,7 @@ public class db {
     public static Connection getconn() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bake_house?useUnicode=true&characterEncoding=UTF-8", "root", "123");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lakmuthu?useUnicode=true&characterEncoding=UTF-8", "root", "123");
 //           con = DriverManager.getConnection("jdbc:mysql://192.168.1.2 :3306/exam_section_system_two?useUnicode=true&characterEncoding=UTF-8", "root","123");
 //              con = DriverManager.getConnection("jdbc:mysql://mysql16.000webhost.com/a3584661_pay?useUnicode=true&characterEncoding=UTF-8", "a3584661_root","");
 //            con = DriverManager.getConnection("jdbc:mysql://192.168.1.50:3306/pos", "root", "123");

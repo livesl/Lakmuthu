@@ -4,6 +4,10 @@
  */
 package viewer;
 
+import com.Messages;
+import java.sql.ResultSet;
+import javax.swing.DefaultComboBoxModel;
+
 /**
  *
  * @author LasithaRanawaka
@@ -15,6 +19,7 @@ public class login extends javax.swing.JFrame {
      */
     public login() {
         initComponents();
+        FirstLoad();
     }
 
     /**
@@ -29,12 +34,12 @@ public class login extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txt_UserName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        txt_Password = new javax.swing.JPasswordField();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
+        cmb_EmployeName = new javax.swing.JComboBox();
+        btn_Login = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Login");
@@ -46,16 +51,29 @@ public class login extends javax.swing.JFrame {
 
         jLabel2.setText("User name");
 
-        jLabel3.setText("Password");
+        txt_UserName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_UserNameKeyPressed(evt);
+            }
+        });
 
-        jPasswordField1.setText("jPasswordField1");
+        jLabel3.setText("Password");
 
         jLabel4.setText("Employee Name");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmb_EmployeName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmb_EmployeNameKeyPressed(evt);
+            }
+        });
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton1.setText("Login");
+        btn_Login.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btn_Login.setText("Login");
+        btn_Login.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_LoginActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -73,11 +91,11 @@ public class login extends javax.swing.JFrame {
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField1)
-                        .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cmb_EmployeName, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txt_UserName)
+                        .addComponent(txt_Password, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(62, 62, 62))
         );
         jPanel1Layout.setVerticalGroup(
@@ -88,17 +106,17 @@ public class login extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmb_EmployeName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_UserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_Password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
-                .addComponent(jButton1)
+                .addComponent(btn_Login)
                 .addContainerGap(47, Short.MAX_VALUE))
         );
 
@@ -116,6 +134,35 @@ public class login extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_LoginActionPerformed
+        if (cmb_EmployeName.getSelectedIndex() != 0 && !txt_UserName.getText().isEmpty() && !txt_Password.getText().isEmpty()) {
+            Login();
+        } else {
+            Messages.fillemptydata();
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_LoginActionPerformed
+
+    private void cmb_EmployeNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmb_EmployeNameKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (cmb_EmployeName.getSelectedIndex() != 0) {
+                txt_UserName.grabFocus();
+            }
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmb_EmployeNameKeyPressed
+
+    private void txt_UserNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_UserNameKeyPressed
+       if (evt.getKeyCode() == 10) {
+            if (!txt_UserName.getText().isEmpty()) {
+                txt_Password.grabFocus();
+            }
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_UserNameKeyPressed
 
     /**
      * @param args the command line arguments
@@ -152,14 +199,73 @@ public class login extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton btn_Login;
+    private javax.swing.JComboBox cmb_EmployeName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPasswordField txt_Password;
+    private javax.swing.JTextField txt_UserName;
     // End of variables declaration//GEN-END:variables
+
+    private void FirstLoad() {
+        cmb_EmployeName.grabFocus();
+        LoadEmployeeCombo();
+    }
+
+    private void LoadEmployeeCombo() {
+
+        DefaultComboBoxModel dcbm = (DefaultComboBoxModel) cmb_EmployeName.getModel();
+        dcbm.removeAllElements();
+
+        try {
+            dcbm.addElement("--Select--");
+            ResultSet rs = model.db.fetch("SELECT\n"
+                    + "employee.full_name\n"
+                    + "FROM\n"
+                    + "employee");
+
+            while (rs.next()) {
+                dcbm.addElement(rs.getString(1));
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void Login() {
+        try {
+
+
+
+            ResultSet rs = model.db.fetch("SELECT\n"
+                    + "employee.full_name\n"
+                    + "FROM\n"
+                    + "employee ,\n"
+                    + "`user`\n"
+                    + "WHERE\n"
+                    + "`user`.employee_id = employee.id AND\n"
+                    + "`user`.`name` = '" + txt_UserName.getText().trim() + "' AND\n"
+                    + "`user`.pw = '" + txt_Password.getText().trim() + "' AND\n"
+                    + "employee.full_name = '" + cmb_EmployeName.getSelectedItem() + "'AND\n"
+                    + "`user`.`status` = '0'");
+
+            if (rs.next()) {
+                this.dispose();
+                new mainView().setVisible(true);
+
+            } else {
+                Messages.warningjoption("Incorrect User Name or Password ! ");
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

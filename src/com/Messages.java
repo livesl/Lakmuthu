@@ -24,6 +24,11 @@ public class Messages {
         JOptionPane.showMessageDialog(null, "Data Updated!");
 
     }
+     public static void fillemptydata() {
+
+        JOptionPane.showMessageDialog(null, "Please Fill Empty Data Feilds !", "Error", 2, null);
+
+    }
 
     public static void normaljoption(String error1) {
 
