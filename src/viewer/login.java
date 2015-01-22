@@ -59,6 +59,12 @@ public class login extends javax.swing.JFrame {
 
         jLabel3.setText("Password");
 
+        txt_Password.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_PasswordKeyPressed(evt);
+            }
+        });
+
         jLabel4.setText("Employee Name");
 
         cmb_EmployeName.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -164,6 +170,12 @@ public class login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_UserNameKeyPressed
 
+    private void txt_PasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_PasswordKeyPressed
+      if (evt.getKeyCode() == 10) {
+           Login();
+        }   // TODO add your handling code here:
+    }//GEN-LAST:event_txt_PasswordKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -175,7 +187,7 @@ public class login extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -260,6 +272,7 @@ public class login extends javax.swing.JFrame {
 
             } else {
                 Messages.warningjoption("Incorrect User Name or Password ! ");
+                cmb_EmployeName.grabFocus();
             }
 
 
