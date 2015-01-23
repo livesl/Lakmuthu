@@ -59,6 +59,11 @@ public class login extends javax.swing.JFrame {
 
         jLabel3.setText("Password");
 
+        txt_Password.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_PasswordActionPerformed(evt);
+            }
+        });
         txt_Password.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_PasswordKeyPressed(evt);
@@ -170,10 +175,18 @@ public class login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_UserNameKeyPressed
 
+    private void txt_PasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_PasswordActionPerformed
+
     private void txt_PasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_PasswordKeyPressed
-      if (evt.getKeyCode() == 10) {
-           Login();
-        }   // TODO add your handling code here:
+      if(evt.getKeyCode()==10){
+      if (cmb_EmployeName.getSelectedIndex() != 0 && !txt_UserName.getText().isEmpty() && !txt_Password.getText().isEmpty()) {
+            Login();
+        } else {
+            Messages.fillemptydata();
+        }
+      }
     }//GEN-LAST:event_txt_PasswordKeyPressed
 
     /**
@@ -268,11 +281,11 @@ public class login extends javax.swing.JFrame {
 
             if (rs.next()) {
                 this.dispose();
-                new mainView().setVisible(true);
+                new mainView(txt_UserName.getText()).setVisible(true);
+                
 
             } else {
                 Messages.warningjoption("Incorrect User Name or Password ! ");
-                cmb_EmployeName.grabFocus();
             }
 
 
