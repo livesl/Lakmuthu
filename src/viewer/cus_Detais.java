@@ -4,6 +4,13 @@
  */
 package viewer;
 
+import com.Messages;
+import com.NIC;
+import java.sql.ResultSet;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
+import model.db;
+
 /**
  *
  * @author LasithaRanawaka
@@ -14,7 +21,9 @@ public class cus_Detais extends javax.swing.JFrame {
      * Creates new form login
      */
     public cus_Detais() {
+        //super();
         initComponents();
+        FirstLoad();
     }
 
     /**
@@ -29,33 +38,34 @@ public class cus_Detais extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbl_CustomerReg = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txt_CusID = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txt_FullName = new javax.swing.JTextField();
+        txt_NameIniti = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txt_BizAddress = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
+        txt_Nic = new javax.swing.JTextField();
+        txt_DoB = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
+        cmb_CivilStatus = new javax.swing.JComboBox();
         jLabel9 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        txt_Mobile1 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        txt_Mobile2 = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
+        txt_LandNo = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
+        cmb_City = new javax.swing.JComboBox();
+        btn_Submit = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
+        txt_Address = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Customer Details");
@@ -65,15 +75,28 @@ public class cus_Detais extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 204));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbl_CustomerReg.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8", "Title 9", "Title 10", "Title 11", "Title 12"
+                "Cus ID", "Full Name", "Name of Initials", "Address", "Address(Business)", "NIC", "DoB", "Civil Status", "TP Mobile 1", "TP Mobile 2", "TP Lan", "City"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbl_CustomerReg.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_CustomerRegMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbl_CustomerReg);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -97,34 +120,111 @@ public class cus_Detais extends javax.swing.JFrame {
 
         jLabel1.setText("Cus ID");
 
+        txt_CusID.setEditable(false);
+
         jLabel3.setText("Full Name");
+
+        txt_FullName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_FullNameKeyPressed(evt);
+            }
+        });
+
+        txt_NameIniti.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_NameInitiKeyPressed(evt);
+            }
+        });
 
         jLabel4.setText("Name of Initials");
 
-        jLabel5.setText("Adress(Business)");
+        jLabel5.setText("Address(Business)");
+
+        txt_BizAddress.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_BizAddressKeyPressed(evt);
+            }
+        });
 
         jLabel6.setText("NIC");
 
+        txt_Nic.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_NicKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_NicKeyReleased(evt);
+            }
+        });
+
+        txt_DoB.setEditable(false);
+
         jLabel7.setText("DoB");
 
-        jLabel8.setText("Married/Single");
+        jLabel8.setText("Civil Status");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmb_CivilStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-Sellect--", "Single", "Married", "Divorced" }));
+        cmb_CivilStatus.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmb_CivilStatusKeyPressed(evt);
+            }
+        });
 
-        jLabel9.setText("TP mobile1");
+        jLabel9.setText("TP Mobile1");
 
-        jLabel10.setText("TP mobile2");
+        txt_Mobile1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_Mobile1KeyPressed(evt);
+            }
+        });
 
-        jLabel11.setText("TP land");
+        jLabel10.setText("TP Mobile2");
+
+        txt_Mobile2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_Mobile2KeyPressed(evt);
+            }
+        });
+
+        jLabel11.setText("TP Land");
+
+        txt_LandNo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_LandNoKeyPressed(evt);
+            }
+        });
 
         jLabel12.setText("City");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmb_City.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmb_CityKeyPressed(evt);
+            }
+        });
+
+        btn_Submit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btn_Submit.setText("Submit");
+        btn_Submit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_SubmitActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("Address");
+
+        txt_Address.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_AddressKeyPressed(evt);
+            }
+        });
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton1.setText("Submit");
-
-        jLabel13.setText("Adress");
+        jButton1.setText("Reset All");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -138,55 +238,58 @@ public class cus_Detais extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_CusID, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txt_FullName, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txt_BizAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txt_NameIniti, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txt_Address))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_Nic, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(27, 27, 27)
-                                .addComponent(jLabel8)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txt_DoB, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
-                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cmb_CivilStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel12)
-                                .addGap(18, 18, 18)
-                                .addComponent(jComboBox3, 0, 106, Short.MAX_VALUE))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField10))))
+                                .addComponent(cmb_City, 0, 141, Short.MAX_VALUE))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_Mobile1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(14, 14, 14)
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_Mobile2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_LandNo, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_Submit, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -194,39 +297,39 @@ public class cus_Detais extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel13)
-                        .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel12)
-                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel13)
+                        .addComponent(txt_Address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel5)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel6)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel8)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel1)
+                        .addComponent(txt_CusID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)
+                        .addComponent(txt_FullName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4)
+                        .addComponent(txt_NameIniti, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txt_BizAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(txt_Nic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(txt_DoB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(cmb_CivilStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12)
+                    .addComponent(cmb_City, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_Mobile2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
+                    .addComponent(txt_LandNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Submit)
+                    .addComponent(txt_Mobile1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(jButton1))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
 
@@ -236,10 +339,10 @@ public class cus_Detais extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -265,6 +368,137 @@ public class cus_Detais extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_SubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SubmitActionPerformed
+        if (!txt_FullName.getText().isEmpty() && !txt_NameIniti.getText().isEmpty() && !txt_Address.getText().isEmpty()
+                && !txt_BizAddress.getText().isEmpty() && !txt_Nic.getText().isEmpty() && !txt_DoB.getText().isEmpty()
+                && cmb_CivilStatus.getSelectedIndex() != 0 && cmb_CivilStatus.getSelectedIndex() != 0 && !txt_Mobile1.getText().isEmpty()
+                && !txt_Mobile2.getText().isEmpty() && !txt_LandNo.getText().isEmpty()) {
+
+            SaveAndUpdateCustomer();
+
+        } else {
+            Messages.fillemptydata();
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_SubmitActionPerformed
+
+    private void txt_FullNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_FullNameKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (!txt_FullName.getText().isEmpty()) {
+                txt_NameIniti.grabFocus();
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_FullNameKeyPressed
+
+    private void txt_NameInitiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NameInitiKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (!txt_NameIniti.getText().isEmpty()) {
+                txt_Address.grabFocus();
+            }
+        }  // TODO add your handling code here:
+    }//GEN-LAST:event_txt_NameInitiKeyPressed
+
+    private void txt_AddressKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_AddressKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (!txt_Address.getText().isEmpty()) {
+                txt_BizAddress.grabFocus();
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_AddressKeyPressed
+
+    private void txt_BizAddressKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_BizAddressKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (!txt_BizAddress.getText().isEmpty()) {
+                txt_Nic.grabFocus();
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_BizAddressKeyPressed
+
+    private void txt_NicKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NicKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (!txt_Nic.getText().isEmpty()) {
+                SetDob();
+
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_NicKeyPressed
+
+    private void cmb_CivilStatusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmb_CivilStatusKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (cmb_CivilStatus.getSelectedIndex() != 0) {
+                cmb_City.grabFocus();
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_cmb_CivilStatusKeyPressed
+
+    private void cmb_CityKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmb_CityKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (cmb_City.getSelectedIndex() != 0) {
+                txt_Mobile1.grabFocus();
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_cmb_CityKeyPressed
+
+    private void txt_Mobile1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_Mobile1KeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (!txt_Mobile1.getText().isEmpty()) {
+                txt_Mobile2.grabFocus();
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_Mobile1KeyPressed
+
+    private void txt_Mobile2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_Mobile2KeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (!txt_Mobile2.getText().isEmpty()) {
+                txt_LandNo.grabFocus();
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_Mobile2KeyPressed
+
+    private void txt_LandNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_LandNoKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (!txt_LandNo.getText().isEmpty()) {
+                if (!txt_FullName.getText().isEmpty() && !txt_NameIniti.getText().isEmpty() && !txt_Address.getText().isEmpty()
+                        && !txt_BizAddress.getText().isEmpty() && !txt_Nic.getText().isEmpty() && !txt_DoB.getText().isEmpty()
+                        && cmb_CivilStatus.getSelectedIndex() != 0 && cmb_CivilStatus.getSelectedIndex() != 0 && !txt_Mobile1.getText().isEmpty()
+                        && !txt_Mobile2.getText().isEmpty() && !txt_LandNo.getText().isEmpty()) {
+
+                    SaveAndUpdateCustomer();
+
+                } else {
+                    Messages.fillemptydata();
+                }
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_LandNoKeyPressed
+    boolean bol = true;
+
+    private void tbl_CustomerRegMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_CustomerRegMouseClicked
+        if (evt.getClickCount() == 2) {
+
+            if (tbl_CustomerReg.getRowCount() != 0) {
+                bol = false;
+                SetDataToFeilds();
+                txt_FullName.grabFocus();
+            }
+        }  // TODO add your handling code here:
+    }//GEN-LAST:event_tbl_CustomerRegMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (!bol) {
+            bol = true;
+            ClearAll();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txt_NicKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NicKeyReleased
+        if (txt_Nic.getText().isEmpty()) {
+            txt_DoB.setText("");
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_NicKeyReleased
 
     /**
      * @param args the command line arguments
@@ -301,9 +535,10 @@ public class cus_Detais extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_Submit;
+    private javax.swing.JComboBox cmb_City;
+    private javax.swing.JComboBox cmb_CivilStatus;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JComboBox jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -320,16 +555,286 @@ public class cus_Detais extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JTable tbl_CustomerReg;
+    private javax.swing.JTextField txt_Address;
+    private javax.swing.JTextField txt_BizAddress;
+    private javax.swing.JTextField txt_CusID;
+    private javax.swing.JTextField txt_DoB;
+    private javax.swing.JTextField txt_FullName;
+    private javax.swing.JTextField txt_LandNo;
+    private javax.swing.JTextField txt_Mobile1;
+    private javax.swing.JTextField txt_Mobile2;
+    private javax.swing.JTextField txt_NameIniti;
+    private javax.swing.JTextField txt_Nic;
     // End of variables declaration//GEN-END:variables
+
+    private void FirstLoad() {
+        LoadComboCitys();
+        LoadComboCivil();
+        LoadCustomerTable();
+        SetCustID();
+        txt_FullName.grabFocus();
+
+    }
+
+    private void LoadComboCitys() {
+        DefaultComboBoxModel dcbm = (DefaultComboBoxModel) cmb_City.getModel();
+        dcbm.removeAllElements();
+
+        try {
+            dcbm.addElement("--Select--");
+            ResultSet rs = model.db.fetch("SELECT\n"
+                    + "city.`name`\n"
+                    + "FROM\n"
+                    + "city");
+
+            while (rs.next()) {
+                dcbm.addElement(rs.getString(1));
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadComboCivil() {
+        cmb_CivilStatus.setSelectedIndex(0);
+    }
+
+    private void LoadCustomerTable() {
+
+        try {
+            DefaultTableModel tb = (DefaultTableModel) tbl_CustomerReg.getModel();
+            tb.setRowCount(0);
+
+
+            try {
+
+                ResultSet rs = model.db.fetch("select * from customer");
+
+                while (rs.next()) {
+
+                    String id = rs.getString(1);
+                    String fullname = rs.getString(2);
+                    String nameinitial = rs.getString(3);
+                    String address = rs.getString(4);
+                    String bizaddress = rs.getString(5);
+                    String nic = rs.getString(6);
+                    String dob = rs.getString(7);
+                    String civil;
+
+                    civil = CheckCivil(rs.getString(8));
+
+                    String mobile1 = rs.getString(9);
+                    String mobile2 = rs.getString(10);
+                    String land = rs.getString(11);
+                    String city = GetCity(rs.getString(12), "name");
+
+
+
+                    Object arr[] = {id, fullname, nameinitial, address, bizaddress, nic, dob, civil, mobile1, mobile2, land, city};
+                    tb.addRow(arr);
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void ClearAll() {
+        txt_FullName.setText(null);
+        txt_BizAddress.setText(null);
+        txt_Address.setText(null);
+        txt_DoB.setText(null);
+        txt_LandNo.setText(null);
+        txt_Mobile1.setText(null);
+        txt_Mobile2.setText(null);
+        txt_NameIniti.setText(null);
+        txt_Nic.setText(null);
+        LoadComboCivil();
+        LoadCustomerTable();
+        LoadComboCitys();
+        SetCustID();
+        bol = true;
+        txt_FullName.grabFocus();
+
+    }
+
+    private void SetCustID() {
+
+        try {
+            ResultSet rs = model.db.fetch("select max(id) from customer");
+            txt_CusID.setText("0");
+            if (rs.next()) {
+
+                if (rs.getString(1) != null) {
+                    int num = Integer.parseInt(rs.getString(1));
+                    num++;
+                    txt_CusID.setText("" + num);
+                }
+
+
+            }
+            txt_FullName.grabFocus();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String GetCity(String val, String prt) {
+        String name = "";
+
+        if (prt.equals("id")) { // return id
+            try {
+
+                ResultSet rs = model.db.fetch("SELECT\n"
+                        + "city.id\n"
+                        + "FROM\n"
+                        + "city\n"
+                        + "WHERE\n"
+                        + "city.`name` = '" + val + "'");
+
+                if (rs.next()) {
+                    name = rs.getString(1);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (prt.equals("name")) { // return name
+
+
+            try {
+
+                ResultSet rs = model.db.fetch("SELECT\n"
+                        + "city.`name`\n"
+                        + "FROM\n"
+                        + "city\n"
+                        + "WHERE\n"
+                        + "\n"
+                        + "city.id = '" + val + "'");
+
+                if (rs.next()) {
+                    name = rs.getString(1);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return name;
+
+    }
+
+    private void SetDob() {
+        int nic = txt_Nic.getText().length();
+        if (nic == 9) {
+
+            String a = new NIC().BirthDatefromNIC(txt_Nic.getText());
+            //System.out.println(a);
+            txt_DoB.setText(a);
+            cmb_CivilStatus.grabFocus();
+        } else {
+
+            Messages.warningjoption("Incorrect NIC ! ");
+            txt_Nic.selectAll();
+            txt_Nic.grabFocus();
+        }
+    }
+
+    private void SetDataToFeilds() {
+
+        txt_CusID.setText(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 0).toString());
+        txt_FullName.setText(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 1).toString());
+        txt_NameIniti.setText(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 2).toString());
+        txt_Address.setText(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 3).toString());
+        txt_BizAddress.setText(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 4).toString());
+        txt_Nic.setText(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 5).toString());
+        txt_DoB.setText(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 6).toString());
+        cmb_CivilStatus.setSelectedItem(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 7).toString());
+        cmb_City.setSelectedItem(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 11).toString());
+        txt_Mobile1.setText(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 8).toString());
+        txt_Mobile2.setText(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 9).toString());
+        txt_LandNo.setText(tbl_CustomerReg.getValueAt(tbl_CustomerReg.getSelectedRow(), 10).toString());
+
+    }
+
+    private void SaveAndUpdateCustomer() {
+        try {
+
+            if (bol) {
+                try {
+                    db.change("insert into customer(id,full_name,mane_ini,address,address_biz,nic,dob,married,tp_mob1,tp_mob2,tp_lan,city_id) "
+                            + "value('" + txt_CusID.getText().trim() + "',"
+                            + "'" + txt_FullName.getText().trim() + "',"
+                            + "'" + txt_NameIniti.getText().trim() + "',"
+                            + "'" + txt_Address.getText().trim() + "',"
+                            + "'" + txt_BizAddress.getText().trim() + "',"
+                            + "'" + txt_Nic.getText().trim() + "',"
+                            + "'" + txt_DoB.getText().trim() + "',"
+                            + "'" + cmb_CivilStatus.getSelectedIndex() + "',"
+                            + "'" + txt_Mobile1.getText().trim() + "',"
+                            + "'" + txt_Mobile2.getText().trim() + "',"
+                            + "'" + txt_LandNo.getText().trim() + "',"
+                            + "'" + GetCity(cmb_City.getSelectedItem().toString(), "id") + "')");
+
+                } catch (Exception e) {
+                    Messages.normaljoption("Save" + e);
+                    return;
+                }
+
+            } else {
+                try {
+                    db.change("Update customer set "
+                            + "full_name='" + txt_FullName.getText().trim() + "', "
+                            + "mane_ini='" + txt_NameIniti.getText().trim() + "', "
+                            + "address='" + txt_Address.getText().trim() + "', "
+                            + "address_biz='" + txt_BizAddress.getText().trim() + "', "
+                            + "nic='" + txt_Nic.getText().trim() + "', "
+                            + "dob='" + txt_DoB.getText().trim() + "', "
+                            + "married='" + cmb_CivilStatus.getSelectedIndex() + "', "
+                            + "tp_mob1='" + txt_Mobile1.getText().trim() + "', "
+                            + "tp_mob2='" + txt_Mobile2.getText().trim() + "', "
+                            + "tp_lan='" + txt_LandNo.getText().trim() + "', "
+                            + "city_id='" + GetCity(cmb_City.getSelectedItem().toString(), "id") + "' "
+                            + "where id='" + txt_CusID.getText().trim() + "'");
+
+                } catch (Exception e) {
+                    Messages.normaljoption("Update" + e);
+                    return;
+                }
+
+                bol = true;
+            }
+
+            ClearAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String CheckCivil(String val) {
+
+        String c = "";
+
+        if (val.equals("1")) {
+            c = "Single";
+
+        } else if (val.equals("2")) {
+            c = "Married";
+        } else if (val.equals("3")) {
+            c = "Divorced";
+        }
+        return c;
+
+    }
 }

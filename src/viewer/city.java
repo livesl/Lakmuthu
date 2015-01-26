@@ -4,6 +4,11 @@
  */
 package viewer;
 
+import com.Messages;
+import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
+import model.db;
+
 /**
  *
  * @author LasithaRanawaka
@@ -15,6 +20,7 @@ public class city extends javax.swing.JFrame {
      */
     public city() {
         initComponents();
+        FirstLoad();
     }
 
     /**
@@ -28,26 +34,26 @@ public class city extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbl_City = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        txt_ID = new javax.swing.JTextField();
+        txt_City = new javax.swing.JTextField();
+        btn_Submit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("City Details");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 204));
 
-        jTable1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbl_City.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tbl_City.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Category"
+                "ID", "City"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -58,11 +64,16 @@ public class city extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getColumn(0).setMinWidth(50);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
-        jTable1.getColumnModel().getColumn(0).setMaxWidth(50);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(50);
+        tbl_City.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_CityMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbl_City);
+        tbl_City.getColumnModel().getColumn(0).setMinWidth(50);
+        tbl_City.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tbl_City.getColumnModel().getColumn(0).setMaxWidth(50);
+        tbl_City.getColumnModel().getColumn(1).setPreferredWidth(50);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 204));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -71,14 +82,27 @@ public class city extends javax.swing.JFrame {
         jLabel1.setText("ID");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel2.setText("Category");
+        jLabel2.setText("City");
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txt_ID.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
-        jTextField2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txt_City.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txt_City.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_CityKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_CityKeyReleased(evt);
+            }
+        });
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton1.setText("Submit");
+        btn_Submit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btn_Submit.setText("Submit");
+        btn_Submit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_SubmitActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -88,13 +112,13 @@ public class city extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txt_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txt_City, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField2)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(btn_Submit)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -104,9 +128,9 @@ public class city extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(txt_ID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_City, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Submit))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -146,6 +170,45 @@ public class city extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txt_CityKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_CityKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (!txt_City.getText().isEmpty()) {
+                SaveAndUpdateCategory();
+            } else {
+                Messages.fillemptydata();
+            }
+        } else if (evt.getKeyCode() == 127) {
+            if (txt_City.getText().isEmpty() && !bol) {
+                bol = true;
+                Clear();
+            }
+        }   // TODO add your handling code here:
+    }//GEN-LAST:event_txt_CityKeyPressed
+
+    private void btn_SubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SubmitActionPerformed
+        if (!txt_City.getText().isEmpty()) {
+            SaveAndUpdateCategory();
+        } else {
+            Messages.fillemptydata();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_SubmitActionPerformed
+
+    private void tbl_CityMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_CityMouseClicked
+        if (evt.getClickCount() == 2) {
+
+            if (tbl_City.getRowCount() != 0) {
+                bol = false;
+                SetDataToFeilds();
+                txt_City.grabFocus();
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_tbl_CityMouseClicked
+    boolean bol = true;
+
+    private void txt_CityKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_CityKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_CityKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -181,14 +244,127 @@ public class city extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btn_Submit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTable tbl_City;
+    private javax.swing.JTextField txt_City;
+    private javax.swing.JTextField txt_ID;
     // End of variables declaration//GEN-END:variables
+
+    private void FirstLoad() {
+
+        LoadCategoryTable();
+        LoadID();
+        txt_City.grabFocus();
+
+    }
+
+    private void LoadCategoryTable() {
+
+        try {
+            DefaultTableModel tb = (DefaultTableModel) tbl_City.getModel();
+            tb.setRowCount(0);
+
+
+            try {
+
+                ResultSet rs = model.db.fetch("select * from city");
+
+                while (rs.next()) {
+
+                    String id = rs.getString(1);
+                    String cate = rs.getString(2);
+                    Object arr[] = {id, cate};
+                    tb.addRow(arr);
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void LoadID() {
+
+        try {
+            ResultSet rs = model.db.fetch("select max(id) from city");
+            txt_ID.setText("0");
+            if (rs.next()) {
+
+               if (rs.getString(1) != null) {
+                    int num = Integer.parseInt(rs.getString(1));
+                    num++;
+                    txt_ID.setText("" + num);
+                }
+
+
+            }
+            txt_City.grabFocus();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void SaveAndUpdateCategory() {
+
+        try {
+
+            if (bol) {
+                try {
+                    db.change("insert into city(id,name) "
+                            + "value('" + txt_ID.getText().trim() + "','" + txt_City.getText().trim() + "')");
+
+                } catch (Exception e) {
+                    Messages.normaljoption("Save" + e);
+                    return;
+                }
+
+            } else {
+                try {
+                    db.change("Update city set name='" + txt_City.getText().trim() + "' where id='" + txt_ID.getText().trim() + "'");
+
+                } catch (Exception e) {
+                    Messages.normaljoption("Update" + e);
+                    return;
+                }
+
+                bol = true;
+            }
+
+            Messages.datasaved();
+            Clear();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void Clear() {
+
+        LoadCategoryTable();
+        LoadID();
+        txt_City.setText(null);
+        txt_City.grabFocus();
+    }
+
+    private void SetDataToFeilds() {
+
+        txt_ID.setText(tbl_City.getValueAt(tbl_City.getSelectedRow(), 0).toString());
+        txt_City.setText(tbl_City.getValueAt(tbl_City.getSelectedRow(), 1).toString());
+    }
 }

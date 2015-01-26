@@ -4,6 +4,12 @@
  */
 package viewer;
 
+import com.Messages;
+import java.sql.ResultSet;
+import java.util.Date;
+import javax.swing.table.DefaultTableModel;
+import model.db;
+
 /**
  *
  * @author LasithaRanawaka
@@ -15,6 +21,7 @@ public class emp_Category extends javax.swing.JFrame {
      */
     public emp_Category() {
         initComponents();
+        FirstLoad();
     }
 
     /**
@@ -28,21 +35,21 @@ public class emp_Category extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbl_Cate = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        txt_ID = new javax.swing.JTextField();
+        txt_Category = new javax.swing.JTextField();
+        btn_Submit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Employee Category");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 204));
 
-        jTable1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbl_Cate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tbl_Cate.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -58,11 +65,21 @@ public class emp_Category extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getColumn(0).setMinWidth(50);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
-        jTable1.getColumnModel().getColumn(0).setMaxWidth(50);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(50);
+        tbl_Cate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_CateMouseClicked(evt);
+            }
+        });
+        tbl_Cate.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tbl_CateKeyPressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbl_Cate);
+        tbl_Cate.getColumnModel().getColumn(0).setMinWidth(50);
+        tbl_Cate.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tbl_Cate.getColumnModel().getColumn(0).setMaxWidth(50);
+        tbl_Cate.getColumnModel().getColumn(1).setPreferredWidth(50);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 204));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -73,12 +90,26 @@ public class emp_Category extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setText("Category");
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txt_ID.setEditable(false);
+        txt_ID.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
-        jTextField2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txt_Category.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txt_Category.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_CategoryKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_CategoryKeyReleased(evt);
+            }
+        });
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton1.setText("Submit");
+        btn_Submit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btn_Submit.setText("Submit");
+        btn_Submit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_SubmitActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -88,13 +119,13 @@ public class emp_Category extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField2)
+                .addComponent(txt_Category)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(btn_Submit)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -104,9 +135,9 @@ public class emp_Category extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(txt_ID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_Category, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Submit))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -146,6 +177,56 @@ public class emp_Category extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txt_CategoryKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_CategoryKeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (!txt_Category.getText().isEmpty()) {
+                SaveAndUpdateCategory();
+            } else {
+                Messages.fillemptydata();
+            }
+        }else if (evt.getKeyCode() == 127) {
+            if (txt_Category.getText().isEmpty() && !bol) {
+                bol = true;
+                Clear();
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_CategoryKeyPressed
+
+    private void btn_SubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SubmitActionPerformed
+        if (!txt_Category.getText().isEmpty()) {
+            SaveAndUpdateCategory();
+        } else {
+            Messages.fillemptydata();
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_SubmitActionPerformed
+
+    private void tbl_CateKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_CateKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbl_CateKeyPressed
+    boolean bol = true;
+
+    private void tbl_CateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_CateMouseClicked
+        if (evt.getClickCount() == 2) {
+
+            if (tbl_Cate.getRowCount() != 0) {
+                bol = false;
+                SetDataToFeilds();
+                txt_Category.grabFocus();
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbl_CateMouseClicked
+
+    private void txt_CategoryKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_CategoryKeyReleased
+        if (txt_Category.getText().isEmpty() && !bol) {
+            bol = true;
+            Clear();
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_CategoryKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -181,14 +262,127 @@ public class emp_Category extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btn_Submit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTable tbl_Cate;
+    private javax.swing.JTextField txt_Category;
+    private javax.swing.JTextField txt_ID;
     // End of variables declaration//GEN-END:variables
+
+    private void FirstLoad() {
+
+        LoadCategoryTable();
+        LoadID();
+        txt_Category.grabFocus();
+
+    }
+
+    private void LoadCategoryTable() {
+
+        try {
+            DefaultTableModel tb = (DefaultTableModel) tbl_Cate.getModel();
+            tb.setRowCount(0);
+
+
+            try {
+
+                ResultSet rs = model.db.fetch("select * from emploee_cat");
+
+                while (rs.next()) {
+
+                    String id = rs.getString(1);
+                    String cate = rs.getString(2);
+                    Object arr[] = {id, cate};
+                    tb.addRow(arr);
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void LoadID() {
+
+        try {
+            ResultSet rs = model.db.fetch("select max(id) from emploee_cat");
+            txt_ID.setText("0");
+            if (rs.next()) {
+
+               if (rs.getString(1) != null) {
+                    int num = Integer.parseInt(rs.getString(1));
+                    num++;
+                    txt_ID.setText("" + num);
+                }
+
+
+            }
+            txt_Category.grabFocus();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void SaveAndUpdateCategory() {
+
+        try {
+
+            if (bol) {
+                try {
+                    db.change("insert into emploee_cat(id,cat) "
+                            + "value('" + txt_ID.getText().trim() + "','" + txt_Category.getText().trim() + "')");
+
+                } catch (Exception e) {
+                    Messages.normaljoption("Save" + e);
+                    return;
+                }
+
+            } else {
+                try {
+                    db.change("Update emploee_cat set cat='" + txt_Category.getText().trim() + "' where id='" + txt_ID.getText().trim() + "'");
+
+                } catch (Exception e) {
+                    Messages.normaljoption("Update" + e);
+                    return;
+                }
+
+                bol = true;
+            }
+
+            Messages.datasaved();
+            Clear();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void Clear() {
+
+        LoadCategoryTable();
+        LoadID();
+        txt_Category.setText(null);
+        txt_Category.grabFocus();
+    }
+
+    private void SetDataToFeilds() {
+
+        txt_ID.setText(tbl_Cate.getValueAt(tbl_Cate.getSelectedRow(), 0).toString());
+        txt_Category.setText(tbl_Cate.getValueAt(tbl_Cate.getSelectedRow(), 1).toString());
+    }
 }
